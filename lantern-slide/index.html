@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS实现预览图幻灯片</title>
+    <script src="js/index.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/index.css"/>
+</head>
+<body>
+<div class="slider">
+    <!-- 0. 修改HTML界面为模板 -->
+    <div class="main" id="template_main">
+        <div class="main-i {{css}}" id="main_{{index}}">
+            <div class="caption">
+                <h2>{{h2}}</h2>
+                <h3>{{h3}}</h3>
+            </div>
+            <img src="img/{{index}}.jpg" class="picture"/>
+        </div>
+    </div>
+    <div class="ctrl" id="template_ctrl">
+        <a class="ctrl-i" id="ctrl_{{index}}" href="javascript:switchSlider({{index}});">
+            <img src="img/{{index}}.jpg"/>
+        </a>
+    </div>
+</div>
+</body>
+</html>
