@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>星级评分（jQuery实现-面向对象）</title>
+    <style>
+        body, ul, li {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        #container {
+            width: 210px;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .rating {
+            width: 150px;
+            height: 30px;
+            position: relative;
+            display: inline-block;
+            top: 8px;
+            left: -4px;
+        }
+
+        .rating-item {
+            float: left;
+            width: 30px;
+            height: 30px;
+            background: url('./img/star.png') no-repeat -30px 0;
+        }
+    </style>
+    <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+<body>
+<div id="container">
+    <span>评分：</span>
+    <ul id="rating" class="rating">
+        <li class="rating-item" title="很不好"></li>
+        <li class="rating-item" title="不好"></li>
+        <li class="rating-item" title="一般"></li>
+        <li class="rating-item" title="好"></li>
+        <li class="rating-item" title="很好"></li>
+    </ul>
+</div>
+<script>
+    var rating = (function () {
+        // 点亮整颗星星
+        var LightEntire = function (el, options) {
+            this.el = document.getElementById(el);
+            this.items = this.el.getElementsByTagName('li');
+            this.opts = options;
+        };
+
+        LightEntire.prototype.init = function () {
+            for (var i = 0; i < this.items.length; i++) {
+                this.items[i].index = i;
+            }
+            this.lightOn(this.opts.num);
+            this.bindEvent();
+        };
+
+        // 点亮星星
+        LightEntire.prototype.lightOn = function (num) {
+            num = parseInt(num);
+            for (var i = 0; i < this.items.length; i++) {
+                var item = this.items[i];
+                if (item.index < num) {
+                    item.style.background = "url('./img/star.png') no-repeat 0 0";
+                } else {
+                    item.style.background = "url('./img/star.png') no-repeat -30px 0";
+                }
+            }
+        };
+        LightEntire.prototype.bindEvent = function () {
+            var _that = this;
+            this.el.onmouseover = function (e) {
+                var e = e || event;
+                var t = e.target.index + 1;
+                _that.lightOn(t);
+
+                (typeof _that.opts.select == 'function') && _that.opts.select(t, _that.items.length);
+            };
+
+            this.el.onclick = function (e) {
+                var e = e || event;
+                _that.opts.num = e.target.index + 1;
+                (typeof _that.opts.chosen == 'function') && _that.opts.chosen(_that.opts.num, _that.items.length);
+            };
+            this.el.onmouseout = function (e) {
+                var e = e || event;
+                _that.lightOn(_that.opts.num);
+            }
+        };
+
+        // 默认参数
+        var defaults = {
+            num: 0,
+            readOnly: false,
+            select: function () {
+            },
+            chosen: function () {
+            }
+        };
+
+        var init = function (el, options) {
+            options = $.extend({}, defaults, options);
+            new LightEntire(el, options).init();
+        };
+
+        return {
+            init: init
+        }
+    })();
+    rating.init('rating', {
+        num: 2,
+        select: function (num, total) {
+            console.log(num + '/' + total);
+        },
+        chosen: function (num, total) {
+            console.log(num + '/' + total);
+        }
+    });
+</script>
+
+</body>
+</html>
