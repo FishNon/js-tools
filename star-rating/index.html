@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>星级评分（jQuery实现-面向对象）</title>
+    <style>
+        body, ul, li {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        #container {
+            width: 210px;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .rating {
+            width: 150px;
+            height: 30px;
+            position: relative;
+            display: inline-block;
+            top: 8px;
+            left: -4px;
+        }
+
+        .rating-item {
+            float: left;
+            width: 30px;
+            height: 30px;
+            background: url('./img/star.png') no-repeat -30px 0;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var rating = new Rating(2, 'rating');
+            rating.init();
+        };
+
+        function Rating(num, id) {
+            this.num = num;
+            this.target = document.getElementById(id);
+            this.children = this.target.getElementsByTagName('li');
+        }
+
+        Rating.prototype.init = function () {
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].index = i;
+            }
+            this.lightOn(this.num);
+            this.controlRating();
+        };
+
+        Rating.prototype.lightOn = function (num) {
+            for (var i = 0; i < this.children.length; i++) {
+                var item = this.children[i];
+                if (item.index < num) {
+                    item.style.background = "url('./img/star.png') no-repeat 0 0";
+                } else {
+                    item.style.background = "url('./img/star.png') no-repeat -30px 0";
+                }
+            }
+        };
+
+        Rating.prototype.controlRating = function () {
+            var _that = this;
+            this.target.onmouseover = function (e) {
+                var e = e || event;
+                var t = e.target.index + 1;
+                _that.lightOn(t);
+            };
+
+            this.target.onclick = function (e) {
+                var e = e || event;
+                _that.num = e.target.index + 1;
+            };
+            this.target.onmouseout = function (e) {
+                var e = e || event;
+                _that.lightOn(_that.num);
+            }
+
+        };
+    </script>
+
+</head>
+<body>
+<div id="container">
+    <span>评分：</span>
+    <ul id="rating" class="rating">
+        <li class="rating-item" title="很不好"></li>
+        <li class="rating-item" title="不好"></li>
+        <li class="rating-item" title="一般"></li>
+        <li class="rating-item" title="好"></li>
+        <li class="rating-item" title="很好"></li>
+    </ul>
+</div>
+</body>
+</html>
